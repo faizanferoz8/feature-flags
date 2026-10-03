@@ -1,0 +1,14 @@
+package dev.flags.server.audit;
+
+public enum AuditAction {
+    ORGANIZATION_CREATED,
+    FLAG_CREATED,
+    FLAG_UPDATED,
+    FLAG_DELETED,
+    FLAG_CONFIG_UPDATED,
+    API_KEY_CREATED,
+    API_KEY_REVOKED,
+    MEMBER_ADDED,
+    MEMBER_ROLE_CHANGED,
+    MEMBER_REMOVED
+}
