@@ -1,0 +1,45 @@
+spring:
+  application:
+    name: feature-flags
+  datasource:
+    # The application connects as a role that does not own the tables, so row-level
+    # security applies to every statement it runs. See V2__row_level_security.sql.
+    url: ${FLAGS_DB_URL:jdbc:postgresql://localhost:5432/flags}
+    username: ${FLAGS_DB_APP_USER:flags_app}
+    password: ${FLAGS_DB_APP_PASSWORD:flags_app}
+  flyway:
+    # Migrations run as the owner. Only Flyway ever holds these credentials.
+    user: ${FLAGS_DB_OWNER_USER:flags}
+    password: ${FLAGS_DB_OWNER_PASSWORD:flags}
+    placeholders:
+      appUser: ${spring.datasource.username}
+      appPassword: ${spring.datasource.password}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.jdbc.time_zone: UTC
+  threads:
+    virtual:
+      enabled: true
+
+flags:
+  jwt:
+    # HS256 signing key, at least 32 bytes. There is no default: the application refuses
+    # to start without one rather than sign tokens with a key that is in the source tree.
+    secret: ${FLAGS_JWT_SECRET:}
+    ttl: 8h
+  stream:
+    heartbeat: 15s
+
+server:
+  shutdown: graceful
+  error:
+    include-message: never
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
